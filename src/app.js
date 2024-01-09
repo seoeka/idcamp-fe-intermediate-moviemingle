@@ -1,5 +1,9 @@
 import './styles/styles.css';
-import '../component/navigation-bar.js';
-import main from './script/view/main.js';
+
+
+import main from './scripts/view/main.js';
+
+import './scripts/component/navigation-bar.js';
+
 
 document.addEventListener('DOMContentLoaded', main);
