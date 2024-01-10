@@ -8,8 +8,6 @@ module.exports = {
         md: '768px',
         lg: '976px',
         xl: '1440px',
-        '400': '400px',
-        '200': '200px',
       },
       fontSize: {
         '2xl': '36px', 
@@ -28,17 +26,16 @@ module.exports = {
         gray: "#C1C1C1",
         light_gray: "#E6E6E6",
       },
-      padding: {
-        'nav': '15px 160px',
-        'nav-md': '15px 40px',
-        'nav-sm': '15px 20px',
-        'but-md' : '8px 20px',
-        'but-sm' : '5px 10px',
-      },
       margin:{
         'ban' : '0 160px',
-        'ban-md' : '0 40px',
-        'ban-sm' : '0 20px',
+        'ban-lg' : '90px 90px',
+        'ban-md' : '60px 60px',
+        'ban-sm' : '20px 20px',
+      },
+      padding:{
+        '15' : '15px 0',
+        'but' : '8px 20px',
+        'sid' : '16px 32px',
       },
       spacing: {
         '1': '5px',
@@ -51,11 +48,14 @@ module.exports = {
         '12' : '80px',
         '14': '100px',
         '15': '120px',
+        '16': '160px',
         '18' : '180px',
         '20' : '200px',
         '25' : '250px',
         '30' : '300px',
         '40': '400px',
+        'co': '90%',
+        'co-xl': '1120px',
       },
       borderRadius: {
         '2': '2px',
@@ -64,7 +64,7 @@ module.exports = {
       },
     },
     fontFamily: {
-      sans: ['Quicksand', 'sans-serif'], // Mengganti 'Graphik' dengan 'Quicksand'
+      sans: ['Quicksand', 'sans-serif'],
     },
   },
   plugins: [

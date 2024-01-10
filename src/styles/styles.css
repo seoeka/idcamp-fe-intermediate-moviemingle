@@ -1,6 +1,7 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
 body {
     @apply max-w-screen-xl mx-0 px-0;

@@ -21,12 +21,24 @@ module.exports = {
           },
         ],
       },
+      {
+        test: /\.(woff2?|ttf|eot|svg)$/,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 8192,
+              name: 'fonts/[name].[ext]'
+            },
+          },
+        ],
+      },
     ]
   },
   plugins: [
     new HtmlWebpackPlugin({
+        favicon: "./src/images/favicon.png",
         template: "./src/index.html",
       }),
-    
   ]
 }
