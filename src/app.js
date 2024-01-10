@@ -7,6 +7,8 @@ import './styles/styles.css';
 // components
 import './scripts/component/navigation-bar.js';
 import './scripts/component/banner.js';
+import './scripts/component/footer.js';
+
 
 AOS.init();
 
