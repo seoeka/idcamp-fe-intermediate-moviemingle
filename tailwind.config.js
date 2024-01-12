@@ -10,13 +10,14 @@ module.exports = {
         xl: '1440px',
       },
       fontSize: {
+        '2lg': '40px',
         '2xl': '36px', 
-        'xl': '32px',
-        'lg': '24px', 
-        'base': '20px',
-        'sm': '18px', 
-        'xs': '14px', 
-        'xxs' : '10px'
+        'xl':  '32px',
+        'lg':  '24px', 
+        'base':'20px',
+        'sm':  '18px', 
+        'xs':  '14px', 
+        'xxs': '10px'
       },
       colors: {
         dark_blue: "#001F3F",
@@ -44,6 +45,7 @@ module.exports = {
         '4': '16px',
         '5': '20px',
         '6': '28px',
+        '7': '35px',
         '10': '50px',
         '11': '60px',
         '12' : '80px',
