@@ -32,10 +32,9 @@ class PopularSection extends HTMLElement {
 
     render() {
         this.innerHTML = `
-            <div id="movie" class="flex flex-col bg-light_gray font-bold py-11 space-y-5">
-                <h2 class="w-co m-auto text-xl">Popular Movies</h2>
-                <div class="w-co m-auto flex flex-row"></div>
-                <div class="w-co m-auto h-3 bg-gray"></div>
+            <div id="movies" class="flex flex-col bg-light_gray font-bold py-11 space-y-5">
+                <h2 class="w-co m-auto mb-0 text-xl">Popular Movies</h2>
+                <div class="w-co m-auto flex flex-row space-x-5 scrollbar scrollbar-thumb-purple scrollbar-track-gray overflow-auto"></div>
             </div>`;
     }
 }

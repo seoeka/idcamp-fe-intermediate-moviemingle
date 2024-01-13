@@ -19,6 +19,9 @@ module.exports = {
         'xs':  '14px', 
         'xxs': '10px'
       },
+      boxShadow: {
+        'poster': '0 0 30px 5px rgba(0, 0, 0, 0.5)',
+      },
       colors: {
         dark_blue: "#001F3F",
         dark_purple: "#635484",
@@ -73,6 +76,6 @@ module.exports = {
     },
   },
   plugins: [
-    
+    require('tailwind-scrollbar')({ nocompatible: true }),
   ],
 }
