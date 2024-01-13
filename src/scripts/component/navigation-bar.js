@@ -64,12 +64,6 @@ class NavigationBar extends HTMLElement {
       setTimeout(toggleSideMenu, 300);
     });
   }
-  
-  
-  
-  
-  
-  
 
   handleScroll() {
     const navbar = this.querySelector('nav');

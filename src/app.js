@@ -7,6 +7,7 @@ import './styles/styles.css';
 // components
 import './scripts/component/navigation-bar.js';
 import './scripts/component/banner.js';
+import './scripts/component/popular.js';
 import './scripts/component/about-us.js';
 import './scripts/component/footer.js';
 
