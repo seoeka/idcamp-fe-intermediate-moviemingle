@@ -78,6 +78,30 @@ class DataSource {
         throw error;
       });
   }
+
+  fetchSearchByCategory(categoryId) {
+    const url = `${this.baseURL}discover/movie?with_genres=${categoryId}`;
+    const settings = {
+        async: true,
+        crossDomain: true,
+        url: url,
+        method: 'GET',
+        headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${this.accessToken}`,
+        },
+    };
+
+    return $.ajax(settings)
+        .then(response => {
+            console.log(response);
+            return response;
+        })
+        .fail(error => {
+            console.error('Error:', error);
+            throw error;
+        });
+}
 }
 
 const dataSource = new DataSource();

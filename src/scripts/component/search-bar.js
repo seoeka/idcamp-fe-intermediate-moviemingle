@@ -28,7 +28,28 @@ class SearchBar extends HTMLElement {
             catCard.setAttribute('id', category.id);
             catCard.setAttribute('name', category.name); 
             movieCategory.appendChild(catCard);
+
+            catCard.addEventListener('click', () => {
+                this.handleCategoryClick(catCard, category.id);
+            });
         });
+    }
+
+    handleCategoryClick(catCard, categoryId) {
+        const allCatCards = this.querySelectorAll('category-item');
+        allCatCards.forEach(card => card.classList.remove('bg-dark_purple', 'text-white'));
+
+        catCard.classList.add('bg-dark_purple', 'text-white');
+        this.fetchAndRenderSearchResults(categoryId);
+    }
+
+    async fetchAndRenderSearchResults(categoryId) {
+        try {
+            const searchResults = await DataSource.fetchSearchByCategory(categoryId);
+            this.renderSearch(searchResults.results);
+        } catch (error) {
+            console.error('Error fetching movies:', error);
+        }
     }
 
     async fetchSearchList() {
@@ -53,6 +74,7 @@ class SearchBar extends HTMLElement {
             searchCard.setAttribute('title', search.title); 
             searchCard.setAttribute('release-date', search.release_date);
             searchCard.setAttribute('vote-average', search.vote_average);
+            searchCard.setAttribute('id', search.genre_ids);
             searchContainer.appendChild(searchCard);
         });
     }
@@ -76,8 +98,7 @@ class SearchBar extends HTMLElement {
                         </div>
                     </div>
                 </div>
-            </div>
-            
+            </div>   
         `;
     }
 }
