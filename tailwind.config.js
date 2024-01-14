@@ -42,6 +42,7 @@ module.exports = {
         'sid' : '16px 32px',
       },
       spacing: {
+        '2r': '2px',
         '1': '5px',
         '2': '8px',
         '3': '10px',

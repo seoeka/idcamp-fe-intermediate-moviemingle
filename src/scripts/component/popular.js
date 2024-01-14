@@ -26,6 +26,7 @@ class PopularSection extends HTMLElement {
             movieCard.setAttribute('src', movie.poster_path);
             movieCard.setAttribute('title', movie.title); 
             movieCard.setAttribute('release-date', movie.release_date);
+            movieCard.setAttribute('vote-average', movie.vote_average);
             movieContainer.appendChild(movieCard);
         });
     }
