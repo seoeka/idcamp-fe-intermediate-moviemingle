@@ -1,10 +1,12 @@
 import './card/category-item';
+import './card/movie-item';
 import DataSource from "../data/data-source";
 
 class SearchBar extends HTMLElement {
     connectedCallback() {
         this.render();
         this.fetchCategoryList();
+        this.fetchSearchList();
     }
 
     async fetchCategoryList() {
@@ -29,6 +31,32 @@ class SearchBar extends HTMLElement {
         });
     }
 
+    async fetchSearchList() {
+        try {
+            const searchData = await DataSource.fetchSearchIdle();
+            const searches = searchData.results;
+            this.renderSearch(searches);
+        } catch (error) {
+            console.error('Error fetching movies:', error);
+        }
+    }
+
+    renderSearch(searches) {
+        const sortedSearches = searches.sort((a, b) => new Date(b.release_date) - new Date(a.release_date));
+
+        const searchContainer = this.querySelector('.search-con');
+        searchContainer.innerHTML = '';
+
+        sortedSearches.slice(0, 8).forEach((search) => {
+            const searchCard = document.createElement('movie-item');
+            searchCard.setAttribute('src', search.poster_path);
+            searchCard.setAttribute('title', search.title); 
+            searchCard.setAttribute('release-date', search.release_date);
+            searchCard.setAttribute('vote-average', search.vote_average);
+            searchContainer.appendChild(searchCard);
+        });
+    }
+
     render() {
         this.innerHTML =`
             <div id="search" class="flex flex-col bg-white w-co my-8 font-bold m-auto">
@@ -37,16 +65,19 @@ class SearchBar extends HTMLElement {
                     <span class="material-icons opacity-50 px-3 py-1">search</span>
                     <input id="searchElement" class="font-normal w-full md:w-40 px-1 pl-0 pr-2 focus:outline-none" placeholder="Search Movies..."></input>
                 </div>
-            </div>
-            <div class="w-co m-auto font-bold">
-                <div class="flex flex-col w-21">
-                    <h4 class="py-2 px-6">Genre</h4>
-                    <div class="cat"></div>
+                <div class="flex flex-row m-auto font-bold mt-5 md:mt-0">
+                    <div class="flex flex-col w-21 mr-3 md:mr-6">
+                        <h4 class="py-2 px-3 md:px-6 text-base">Genre</h4>
+                        <div class="cat"></div>
+                    </div>
+                    <div class="flex w-full flex-col h-fit ">
+                        <h4 class="py-2 px-6 text-base text-white cursor-default">Search List</h4>
+                        <div class="flex w-full flex-wrap justify-between search-con">
+                        </div>
+                    </div>
                 </div>
-                <div class="flex flex-wrap">
-                
-                </div>
             </div>
+            
         `;
     }
 }
