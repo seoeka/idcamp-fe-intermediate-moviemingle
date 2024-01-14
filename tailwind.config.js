@@ -20,7 +20,7 @@ module.exports = {
         'xxs': '10px'
       },
       boxShadow: {
-        'poster': '0 0 30px 5px rgba(0, 0, 0, 0.5)',
+        'search': '0 0 10px 0px rgba(0, 0, 0, 0.3)',
       },
       colors: {
         dark_blue: "#001F3F",
@@ -49,6 +49,7 @@ module.exports = {
         '5': '20px',
         '6': '28px',
         '7': '35px',
+        '8': '40px',
         '10': '50px',
         '11': '60px',
         '12' : '80px',

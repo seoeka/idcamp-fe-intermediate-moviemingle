@@ -53,6 +53,54 @@ class DataSource {
         throw error;
       });
   }
+
+  fetchCategory() {
+    const url = `${this.baseURL}movie/popular?language=en-US&page=1`;
+    const settings = {
+      async: true,
+      crossDomain: true,
+      url: url,
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+        Authorization: `Bearer ${this.accessToken}`,
+      },
+    };
+
+    return $.ajax(settings)
+      .then(response => {
+        console.log(response);
+        return response;
+      })
+      .fail(error => {
+        console.error('Error:', error);
+        throw error;
+      });
+  }
+
+  fetchSearchIdle() {
+    const url = `${this.baseURL}movie/popular?language=en-US&page=1`;
+    const settings = {
+      async: true,
+      crossDomain: true,
+      url: url,
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+        Authorization: `Bearer ${this.accessToken}`,
+      },
+    };
+
+    return $.ajax(settings)
+      .then(response => {
+        console.log(response);
+        return response;
+      })
+      .fail(error => {
+        console.error('Error:', error);
+        throw error;
+      });
+  }
 }
 
 const dataSource = new DataSource();

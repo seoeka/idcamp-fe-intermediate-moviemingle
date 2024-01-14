@@ -8,6 +8,7 @@ import './styles/styles.css';
 import './scripts/component/navigation-bar.js';
 import './scripts/component/banner.js';
 import './scripts/component/popular.js';
+import './scripts/component/search-bar.js';
 import './scripts/component/about-us.js';
 import './scripts/component/footer.js';
 
