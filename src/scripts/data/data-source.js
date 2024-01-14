@@ -55,7 +55,7 @@ class DataSource {
   }
 
   fetchCategory() {
-    const url = `${this.baseURL}movie/popular?language=en-US&page=1`;
+    const url = `${this.baseURL}genre/movie/list`;
     const settings = {
       async: true,
       crossDomain: true,
