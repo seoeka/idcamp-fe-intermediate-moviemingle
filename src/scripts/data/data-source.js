@@ -80,28 +80,56 @@ class DataSource {
   }
 
   fetchSearchByCategory(categoryId) {
-    const url = `${this.baseURL}discover/movie?with_genres=${categoryId}`;
+    const today = new Date().toISOString().split('T')[0];
+    const url = `${this.baseURL}/discover/movie?with_genres=${categoryId}&primary_release_date.lte=${today}&sort_by=release_date.desc&language=en-US&page=1`;
+    
     const settings = {
-        async: true,
-        crossDomain: true,
-        url: url,
-        method: 'GET',
-        headers: {
-            accept: 'application/json',
-            Authorization: `Bearer ${this.accessToken}`,
-        },
+      async: true,
+      crossDomain: true,
+      url: url,
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+        Authorization: `Bearer ${this.accessToken}`,
+      },
     };
 
     return $.ajax(settings)
-        .then(response => {
-            console.log(response);
-            return response;
-        })
-        .fail(error => {
-            console.error('Error:', error);
-            throw error;
-        });
-}
+      .then(response => {
+        console.log(response);
+        return response;
+      })
+      .fail(error => {
+        console.error('Error:', error);
+        throw error;
+      });
+  }
+
+  fetchSearchByQuery(query) {
+    const today = new Date().toISOString().split('T')[0];
+    const url = `${this.baseURL}/search/movie?query=${query}&primary_release_date.lte=${today}&sort_by=release_date.desc&language=en-US&page=1`;
+    
+    const settings = {
+      async: true,
+      crossDomain: true,
+      url: url,
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+        Authorization: `Bearer ${this.accessToken}`,
+      },
+    };
+
+    return $.ajax(settings)
+      .then(response => {
+        console.log(response);
+        return response;
+      })
+      .fail(error => {
+        console.error('Error:', error);
+        throw error;
+      });
+  }
 }
 
 const dataSource = new DataSource();

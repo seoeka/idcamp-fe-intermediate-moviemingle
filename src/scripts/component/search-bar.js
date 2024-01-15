@@ -7,6 +7,7 @@ class SearchBar extends HTMLElement {
         this.render();
         this.fetchCategoryList();
         this.fetchSearchList();
+        this.setupEventListeners()
     }
 
     async fetchCategoryList() {
@@ -28,28 +29,7 @@ class SearchBar extends HTMLElement {
             catCard.setAttribute('id', category.id);
             catCard.setAttribute('name', category.name); 
             movieCategory.appendChild(catCard);
-
-            catCard.addEventListener('click', () => {
-                this.handleCategoryClick(catCard, category.id);
-            });
         });
-    }
-
-    handleCategoryClick(catCard, categoryId) {
-        const allCatCards = this.querySelectorAll('category-item');
-        allCatCards.forEach(card => card.classList.remove('bg-dark_purple', 'text-white'));
-
-        catCard.classList.add('bg-dark_purple', 'text-white');
-        this.fetchAndRenderSearchResults(categoryId);
-    }
-
-    async fetchAndRenderSearchResults(categoryId) {
-        try {
-            const searchResults = await DataSource.fetchSearchByCategory(categoryId);
-            this.renderSearch(searchResults.results);
-        } catch (error) {
-            console.error('Error fetching movies:', error);
-        }
     }
 
     async fetchSearchList() {
@@ -62,13 +42,30 @@ class SearchBar extends HTMLElement {
         }
     }
 
+    async fetchAndRenderQuery(query) {
+        try {
+            const searchResults = await DataSource.fetchSearchByQuery(query);
+            if (query== ""){
+                this.renderSearch(searchResults.results);
+            } else {
+                if (searchResults.results.length === 0) {
+                    this.renderNotFound();
+                } else {
+                    this.renderSearch(searchResults.results);
+                }
+            }
+        } catch (error) {
+            console.error('Error fetching movies:', error);
+        }
+    }
+
     renderSearch(searches) {
         const sortedSearches = searches.sort((a, b) => new Date(b.release_date) - new Date(a.release_date));
 
         const searchContainer = this.querySelector('.search-con');
         searchContainer.innerHTML = '';
 
-        sortedSearches.slice(0, 8).forEach((search) => {
+        sortedSearches.slice(0, 12).forEach((search) => {
             const searchCard = document.createElement('movie-item');
             searchCard.setAttribute('src', search.poster_path);
             searchCard.setAttribute('title', search.title); 
@@ -79,6 +76,40 @@ class SearchBar extends HTMLElement {
         });
     }
 
+    renderNotFound() {
+        const searchContainer = this.querySelector('.search-con');
+
+        searchContainer.innerHTML = `
+            <div class="flex w-full">
+                <p class="flex w-full m-auto">There are no movies that matched your query.</p>
+            </div>`;
+    }
+
+    async fetchAndRenderCategory(categoryId) {
+        try {
+            const searchResults = await DataSource.fetchSearchByCategory(categoryId);
+            this.renderSearch(searchResults.results);
+        } catch (error) {
+            console.error('Error fetching movies:', error);
+        }
+    }
+
+    setupEventListeners() {
+        const searchInputElement = this.querySelector('#searchElement');
+        
+        searchInputElement.addEventListener('focus', () => {
+            this.fetchSearchList();
+            this.clearCategoryColors();
+        });
+    }
+    
+    clearCategoryColors() {
+    const allCatCards = this.querySelectorAll('a');
+    allCatCards.forEach(card => {
+        card.classList.remove('bg-dark_purple', 'text-white');
+    });
+}
+    
     render() {
         this.innerHTML =`
             <div id="search" class="flex flex-col bg-white w-co my-8 font-bold m-auto">
@@ -87,7 +118,7 @@ class SearchBar extends HTMLElement {
                     <span class="material-icons opacity-50 px-3 py-1">search</span>
                     <input id="searchElement" class="font-normal w-full md:w-40 px-1 pl-0 pr-2 focus:outline-none" placeholder="Search Movies..."></input>
                 </div>
-                <div class="flex flex-row m-auto font-bold mt-5 md:mt-0">
+                <div class="flex flex-row font-bold mt-5 md:mt-0">
                     <div class="flex flex-col w-21 mr-3 md:mr-6">
                         <h4 class="py-2 px-3 md:px-6 text-base">Genre</h4>
                         <div class="cat"></div>
@@ -98,7 +129,7 @@ class SearchBar extends HTMLElement {
                         </div>
                     </div>
                 </div>
-            </div>   
+            </div>
         `;
     }
 }
