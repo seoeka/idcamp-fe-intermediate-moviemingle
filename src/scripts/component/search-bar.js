@@ -2,12 +2,58 @@ import './card/category-item';
 import './card/movie-item';
 import DataSource from "../data/data-source";
 
+class Total {
+    constructor(element) {
+        this.element = element;
+    }
+
+    updateTotal(total) {
+        if (total === null || total === undefined) {
+            this.element.textContent = `Total Results: 0`;
+        } else {
+            this.element.textContent = `Total Results: ${total}`;
+        }
+    }
+}
+
 class SearchBar extends HTMLElement {
+    constructor() {
+        super();
+        this.totalElement = null;
+        this.currentPage = parseInt(localStorage.getItem('currentPage')) || 1;     
+        this.resultsPerPage = 20;
+        this.totalPage = 10;
+        this.lastAction = 'searchList';
+    }
+
     connectedCallback() {
         this.render();
         this.fetchCategoryList();
-        this.fetchSearchList();
-        this.setupEventListeners()
+        this.performLastAction();
+        this.totalElement = new Total(this.querySelector('.total'));
+    }
+
+    performLastAction() {
+        switch (this.lastAction) {
+            case 'searchList':
+                this.fetchSearchList();
+                break;
+            case 'category':
+                this.fetchAndRenderCategory(this.lastActionData);
+                break;
+            case 'query':
+                const queryInputElement = this.querySelector('#searchElement');
+                const query = queryInputElement.value;
+                this.fetchAndRenderQuery(query);
+                break;
+            default:
+                this.fetchSearchList();
+                break;
+        }
+        if (!localStorage.getItem('currentPage')) {
+            this.currentPage = 1;
+            this.updateCurrentPage();
+        }
     }
 
     async fetchCategoryList() {
@@ -34,9 +80,13 @@ class SearchBar extends HTMLElement {
 
     async fetchSearchList() {
         try {
-            const searchData = await DataSource.fetchSearchIdle();
+            this.updateCurrentPage();
+            const searchData = await DataSource.fetchSearchIdle(this.currentPage);
             const searches = searchData.results;
-            this.renderSearch(searches);
+            const total = searchData.total_results;
+            this.renderSearch(searches, total);
+            localStorage.setItem('currentPage', this.currentPage);  // Simpan setelah updateCurrentPage
+
         } catch (error) {
             console.error('Error fetching movies:', error);
         }
@@ -44,28 +94,31 @@ class SearchBar extends HTMLElement {
 
     async fetchAndRenderQuery(query) {
         try {
-            const searchResults = await DataSource.fetchSearchByQuery(query);
+            const searchResults = await DataSource.fetchSearchByQuery(query, this.currentPage);
+            this.totalPage = Math.ceil(searchResults.total_results / this.resultsPerPage);
             if (query== ""){
-                this.renderSearch(searchResults.results);
+                this.renderSearch(searchResults.results, searchResults.total_results);
             } else {
                 if (searchResults.results.length === 0) {
                     this.renderNotFound();
+                    this.totalElement.updateTotal(null);
                 } else {
-                    this.renderSearch(searchResults.results);
+                    this.renderSearch(searchResults.results, searchResults.total_results);
                 }
             }
+            this.updateCurrentPage();
         } catch (error) {
             console.error('Error fetching movies:', error);
         }
     }
 
-    renderSearch(searches) {
+    renderSearch(searches, total) {
         const sortedSearches = searches.sort((a, b) => new Date(b.release_date) - new Date(a.release_date));
 
         const searchContainer = this.querySelector('.search-con');
         searchContainer.innerHTML = '';
 
-        sortedSearches.slice(0, 12).forEach((search) => {
+        sortedSearches.slice(0, 20).forEach((search) => {
             const searchCard = document.createElement('movie-item');
             searchCard.setAttribute('src', search.poster_path);
             searchCard.setAttribute('title', search.title); 
@@ -74,6 +127,8 @@ class SearchBar extends HTMLElement {
             searchCard.setAttribute('id', search.genre_ids);
             searchContainer.appendChild(searchCard);
         });
+
+        this.totalElement.updateTotal(total);
     }
 
     renderNotFound() {
@@ -87,28 +142,12 @@ class SearchBar extends HTMLElement {
 
     async fetchAndRenderCategory(categoryId) {
         try {
-            const searchResults = await DataSource.fetchSearchByCategory(categoryId);
-            this.renderSearch(searchResults.results);
+            const searchResults = await DataSource.fetchSearchByCategory(categoryId, this.currentPage);
+            this.renderSearch(searchResults.results, searchResults.total_results);
         } catch (error) {
             console.error('Error fetching movies:', error);
         }
     }
-
-    setupEventListeners() {
-        const searchInputElement = this.querySelector('#searchElement');
-        
-        searchInputElement.addEventListener('focus', () => {
-            this.fetchSearchList();
-            this.clearCategoryColors();
-        });
-    }
-    
-    clearCategoryColors() {
-    const allCatCards = this.querySelectorAll('a');
-    allCatCards.forEach(card => {
-        card.classList.remove('bg-dark_purple', 'text-white');
-    });
-}
     
     render() {
         this.innerHTML =`
@@ -127,10 +166,28 @@ class SearchBar extends HTMLElement {
                         <h4 class="py-2 px-6 text-base text-white cursor-default">Search List</h4>
                         <div class="flex w-full flex-wrap justify-between search-con">
                         </div>
+                        <div class="total">Total Results : ${this.getAttribute("total-results")}</div>
+                        <div class="pagination">
+                            <button data-type="prev">&lt;</button>
+                            <span>Page 
+                            <span id="currentPage">${this.currentPage}</span> of 
+                            <span id="lastPage">${this.totalPage}</span></span>
+                            <button data-type="next">&gt;</button>
+                        </div>
                     </div>
                 </div>
             </div>
         `;
+        this.updateCurrentPage();
+    }
+    
+    updateCurrentPage() {
+        localStorage.setItem('currentPage', this.currentPage);
+        const currentPageElement = this.querySelector('#currentPage');
+        currentPageElement.textContent = this.currentPage;
+
+        const lastPageElement = this.querySelector('#lastPage');
+        lastPageElement.textContent = this.totalPage;  // Perbarui totalPage
     }
 }
 

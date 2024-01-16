@@ -54,9 +54,9 @@ class DataSource {
       });
   }
 
-  fetchSearchIdle() {
+  fetchSearchIdle(page) {
     const today = new Date().toISOString().split('T')[0]; // Get the current date in the format YYYY-MM-DD
-    const url = `${this.baseURL}discover/movie?primary_release_date.lte=${today}&sort_by=release_date.desc&language=en-US&page=1`;
+    const url = `${this.baseURL}discover/movie?primary_release_date.lte=${today}&sort_by=release_date.desc&language=en-US&page=${page}`;
     const settings = {
       async: true,
       crossDomain: true,
@@ -79,9 +79,9 @@ class DataSource {
       });
   }
 
-  fetchSearchByCategory(categoryId) {
+  fetchSearchByCategory(categoryId, page) {
     const today = new Date().toISOString().split('T')[0];
-    const url = `${this.baseURL}/discover/movie?with_genres=${categoryId}&primary_release_date.lte=${today}&sort_by=release_date.desc&language=en-US&page=1`;
+    const url = `${this.baseURL}/discover/movie?with_genres=${categoryId}&primary_release_date.lte=${today}&sort_by=release_date.desc&language=en-US&page=${page}`;
     
     const settings = {
       async: true,
@@ -105,9 +105,9 @@ class DataSource {
       });
   }
 
-  fetchSearchByQuery(query) {
+  fetchSearchByQuery(query, page) {
     const today = new Date().toISOString().split('T')[0];
-    const url = `${this.baseURL}/search/movie?query=${query}&primary_release_date.lte=${today}&sort_by=release_date.desc&language=en-US&page=1`;
+    const url = `${this.baseURL}/search/movie?query=${query}&primary_release_date.lte=${today}&sort_by=release_date.desc&language=en-US&page=${page}`;
     
     const settings = {
       async: true,
