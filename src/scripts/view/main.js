@@ -19,6 +19,7 @@ function main() {
             searchBar.lastActionData = clickedCategoryId;
             searchBar.currentPage = 1;
             searchBar.performLastAction();
+            togglePaginationButtons(searchBar.currentPage, searchBar.totalPage);
         }
     });
 
@@ -33,6 +34,7 @@ function main() {
         });
 
         searchBar.updateCurrentPage(); 
+        togglePaginationButtons(searchBar.currentPage, searchBar.totalPage);
     });
 
     searchInputElement.addEventListener('input', () => {
@@ -49,29 +51,41 @@ function main() {
         if (query === "") {
             searchBar.currentPage = 1;
             searchBar.fetchSearchList();
-            searchBar.updateCurrentPage();
         }
+        searchBar.updateCurrentPage();
+        togglePaginationButtons(searchBar.currentPage, searchBar.totalPage);
+
     });
 
     const prevButton = document.querySelector('[data-type="prev"]');
     const nextButton = document.querySelector('[data-type="next"]');
 
+    
     prevButton.addEventListener('click', () => {
         searchBar.currentPage = Math.max(1, searchBar.currentPage - 1);
+        togglePaginationButtons(searchBar.currentPage, searchBar.totalPage);
         searchBar.performLastAction();
-        
         searchBar.updateCurrentPage();
     });
 
     nextButton.addEventListener('click', () => {
 
         searchBar.currentPage = Math.min(searchBar.totalPage, searchBar.currentPage + 1);
+        togglePaginationButtons(searchBar.currentPage, searchBar.totalPage);
         searchBar.performLastAction();
-
         searchBar.updateCurrentPage();
     });
 
+    function togglePaginationButtons(currentPage, totalPage) {
+        const prevButton = document.querySelector('[data-type="prev"]');
+        const nextButton = document.querySelector('[data-type="next"]');
+    
+        prevButton.style.display = (currentPage === 1) ? 'none' : 'inline-block';
+        nextButton.style.display = (currentPage === totalPage) ? 'none' : 'inline-block';
+    }
+
     searchBar.currentPage =  1;
+    togglePaginationButtons(searchBar.currentPage, searchBar.totalPage);
     searchBar.lastAction = localStorage.getItem('lastAction') || 'searchList';
 
     const storedPage = localStorage.getItem('currentPage');

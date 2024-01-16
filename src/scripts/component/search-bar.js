@@ -2,24 +2,9 @@ import './card/category-item';
 import './card/movie-item';
 import DataSource from "../data/data-source";
 
-class Total {
-    constructor(element) {
-        this.element = element;
-    }
-
-    updateTotal(total) {
-        if (total === null || total === undefined) {
-            this.element.textContent = `Total Results: 0`;
-        } else {
-            this.element.textContent = `Total Results: ${total}`;
-        }
-    }
-}
-
 class SearchBar extends HTMLElement {
     constructor() {
         super();
-        this.totalElement = null;
         this.currentPage = parseInt(localStorage.getItem('currentPage')) || 1;     
         this.resultsPerPage = 20;
         this.totalPage = 10;
@@ -30,7 +15,6 @@ class SearchBar extends HTMLElement {
         this.render();
         this.fetchCategoryList();
         this.performLastAction();
-        this.totalElement = new Total(this.querySelector('.total'));
     }
 
     performLastAction() {
@@ -84,9 +68,9 @@ class SearchBar extends HTMLElement {
             const searchData = await DataSource.fetchSearchIdle(this.currentPage);
             const searches = searchData.results;
             const total = searchData.total_results;
+            this.totalPage = Math.min(10, Math.ceil(total / this.resultsPerPage));
             this.renderSearch(searches, total);
-            localStorage.setItem('currentPage', this.currentPage);  // Simpan setelah updateCurrentPage
-
+            localStorage.setItem('currentPage', this.currentPage); 
         } catch (error) {
             console.error('Error fetching movies:', error);
         }
@@ -95,24 +79,23 @@ class SearchBar extends HTMLElement {
     async fetchAndRenderQuery(query) {
         try {
             const searchResults = await DataSource.fetchSearchByQuery(query, this.currentPage);
-            this.totalPage = Math.ceil(searchResults.total_results / this.resultsPerPage);
             if (query== ""){
                 this.renderSearch(searchResults.results, searchResults.total_results);
             } else {
                 if (searchResults.results.length === 0) {
                     this.renderNotFound();
-                    this.totalElement.updateTotal(null);
                 } else {
                     this.renderSearch(searchResults.results, searchResults.total_results);
                 }
             }
+            this.totalPage = Math.min(10, Math.ceil(searchResults.total_results / this.resultsPerPage));
             this.updateCurrentPage();
         } catch (error) {
             console.error('Error fetching movies:', error);
         }
     }
 
-    renderSearch(searches, total) {
+    renderSearch(searches) {
         const sortedSearches = searches.sort((a, b) => new Date(b.release_date) - new Date(a.release_date));
 
         const searchContainer = this.querySelector('.search-con');
@@ -127,8 +110,6 @@ class SearchBar extends HTMLElement {
             searchCard.setAttribute('id', search.genre_ids);
             searchContainer.appendChild(searchCard);
         });
-
-        this.totalElement.updateTotal(total);
     }
 
     renderNotFound() {
@@ -142,6 +123,7 @@ class SearchBar extends HTMLElement {
 
     async fetchAndRenderCategory(categoryId) {
         try {
+            this.updateCurrentPage();
             const searchResults = await DataSource.fetchSearchByCategory(categoryId, this.currentPage);
             this.renderSearch(searchResults.results, searchResults.total_results);
         } catch (error) {
@@ -151,6 +133,15 @@ class SearchBar extends HTMLElement {
     
     render() {
         this.innerHTML =`
+            <style>
+                .num {
+                    width:35px;
+                    height:35px;
+                    border-radius: 5px;
+                }
+            </style>
+
+
             <div id="search" class="flex flex-col bg-white w-co my-8 font-bold m-auto">
                 <h3 class="flex m-auto w-fit text-lg mb-4">Find Movies, Discover Stories</h3>
                 <div class="flex m-auto text-sm shadow-search items-center rounded-5 w-full md:w-fit p-2">
@@ -158,26 +149,27 @@ class SearchBar extends HTMLElement {
                     <input id="searchElement" class="font-normal w-full md:w-40 px-1 pl-0 pr-2 focus:outline-none" placeholder="Search Movies..."></input>
                 </div>
                 <div class="flex flex-row font-bold mt-5 md:mt-0">
-                    <div class="flex flex-col w-21 mr-3 md:mr-6">
+                    <div class="hidden md:flex flex-col w-21 mr-3 md:mr-6">
                         <h4 class="py-2 px-3 md:px-6 text-base">Genre</h4>
                         <div class="cat"></div>
                     </div>
-                    <div class="flex w-full flex-col h-fit ">
+                    <div class="flex w-full flex-col h-fit">
                         <h4 class="py-2 px-6 text-base text-white cursor-default">Search List</h4>
-                        <div class="flex w-full flex-wrap justify-between search-con">
-                        </div>
-                        <div class="total">Total Results : ${this.getAttribute("total-results")}</div>
-                        <div class="pagination">
-                            <button data-type="prev">&lt;</button>
-                            <span>Page 
-                            <span id="currentPage">${this.currentPage}</span> of 
-                            <span id="lastPage">${this.totalPage}</span></span>
-                            <button data-type="next">&gt;</button>
+                        <div class="flex w-full flex-wrap search-con justify-center m-auto gap-3 search-con"></div>
+                        <div class="flex flex-row ml-auto items-center">
+                            <div class="pagination text-dark_purple">
+                                <button data-type="prev" class="num border border-dark_purple  hover:bg-dark_purple hover:text-white">&lt;</button>
+                                <button id="currentPage" class="num border cursor-text border-dark_purple bg-dark_purple text-white">${this.currentPage}</button> 
+                                <button class="mid px-2 cursor-text"> of </button>
+                                <button id="lastPage" class="num border cursor-text border-dark_purple">${this.totalPage}</button>
+                                <button data-type="next" class="num border border-dark_purple hover:bg-dark_purple hover:text-white">&gt;</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         `;
+        
         this.updateCurrentPage();
     }
     
@@ -187,7 +179,7 @@ class SearchBar extends HTMLElement {
         currentPageElement.textContent = this.currentPage;
 
         const lastPageElement = this.querySelector('#lastPage');
-        lastPageElement.textContent = this.totalPage;  // Perbarui totalPage
+        lastPageElement.textContent = this.totalPage;
     }
 }
 
