@@ -1,25 +1,28 @@
 import nullimg from "../../../images/null-image.png";
 
 class MovieItem extends HTMLElement {
-    connectedCallback(){
-        this.render();
-    }
+  connectedCallback() {
+    this.render();
+  }
 
-    formattedDate(dateString) {
-        const opt = { year: 'numeric', month: 'short', day: 'numeric' };
-        const formatDate = new Date(dateString).toLocaleDateString(undefined, opt);
-        return formatDate;
-    }
+  formattedDate(dateString) {
+    const opt = { year: "numeric", month: "short", day: "numeric" };
+    const formatDate = new Date(dateString).toLocaleDateString(undefined, opt);
+    return formatDate;
+  }
 
-    render(){
-        const releaseDate = this.formattedDate(this.getAttribute("release-date"));
-        const average = parseFloat(this.getAttribute("vote-average"));
-        const voteAverage = average.toFixed(1);
+  render() {
+    const releaseDate = this.formattedDate(this.getAttribute("release-date"));
+    const average = parseFloat(this.getAttribute("vote-average"));
+    const voteAverage = average.toFixed(1);
 
-        const src = (this.getAttribute("src") !== "null" && this.getAttribute("src") !== undefined)
-        ? `https://media.themoviedb.org/t/p/w220_and_h330_face${this.getAttribute("src")}` : `${nullimg}`;
+    const src =
+      this.getAttribute("src") !== "null" &&
+      this.getAttribute("src") !== undefined
+        ? `https://media.themoviedb.org/t/p/w220_and_h330_face${this.getAttribute("src")}`
+        : `${nullimg}`;
 
-        this.innerHTML = `
+    this.innerHTML = `
             <div class="flex flex-col cursor-pointer mb-7 mr-auto">
                 <div class="max-h-24 max-w-16 relative hover:-translate-y-2 duration-200">
                     <img src="${src}" alt="${this.getAttribute("title")}" 
@@ -35,7 +38,7 @@ class MovieItem extends HTMLElement {
                 </div>
             </div>
         `;
-    }
+  }
 }
-   
-customElements.define('movie-item', MovieItem);
+
+customElements.define("movie-item", MovieItem);

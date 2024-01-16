@@ -1,11 +1,11 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
- 
+
 module.exports = {
-  entry: './src/app.js',
+  entry: "./src/app.js",
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: "bundle.js"
+    path: path.resolve(__dirname, "dist"),
+    filename: "bundle.js",
   },
   module: {
     rules: [
@@ -25,20 +25,20 @@ module.exports = {
         test: /\.(woff2?|ttf|eot|svg)$/,
         use: [
           {
-            loader: 'url-loader',
+            loader: "url-loader",
             options: {
               limit: 8192,
-              name: 'fonts/[name].[ext]'
+              name: "fonts/[name].[ext]",
             },
           },
         ],
       },
-    ]
+    ],
   },
   plugins: [
     new HtmlWebpackPlugin({
-        favicon: "./src/images/favicon.png",
-        template: "./src/index.html",
-      }),
-  ]
-}
+      favicon: "./src/images/favicon.png",
+      template: "./src/index.html",
+    }),
+  ],
+};

@@ -1,12 +1,12 @@
 import aboutimg from "../../images/about-us-mm.png";
 
 class AboutUs extends HTMLElement {
-    connectedCallback() {
-        this.render();
-    }
+  connectedCallback() {
+    this.render();
+  }
 
-    render() {
-        this.innerHTML =`
+  render() {
+    this.innerHTML = `
         <div id="about-us" class="bg-light_gray">
             <div class="flex flex-col md:flex-row items-center w-co m-auto py-11">
                 <div class="w-full md:w-1/4 max-h-20 min-h-15 md:order-2 mb-8 md:mb-0">
@@ -22,7 +22,7 @@ class AboutUs extends HTMLElement {
             </div>
         </div>
             `;
-    }
+  }
 }
 
 customElements.define("about-us", AboutUs);

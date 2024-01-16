@@ -1,23 +1,33 @@
+import nullimg from "../../../images/null-image.png";
+
 class PopularItem extends HTMLElement {
-    connectedCallback(){
-        this.render();
-    }
+  connectedCallback() {
+    this.render();
+  }
 
-    formatDate(dateString) {
-        const options = { year: 'numeric', month: 'short', day: 'numeric' };
-        const formattedDate = new Date(dateString).toLocaleDateString(undefined, options);
-        return formattedDate;
-    }
+  formatDate(dateString) {
+    const options = { year: "numeric", month: "short", day: "numeric" };
+    const formattedDate = new Date(dateString).toLocaleDateString(
+      undefined,
+      options,
+    );
+    return formattedDate;
+  }
 
-    render(){
-        const formattedReleaseDate = this.formatDate(this.getAttribute("release-date"));
-        const voteAverage = parseFloat(this.getAttribute("vote-average"));
-        const formattedVoteAverage = voteAverage.toFixed(1);
+  render() {
+    const formattedReleaseDate = this.formatDate(
+      this.getAttribute("release-date"),
+    );
+    const voteAverage = parseFloat(this.getAttribute("vote-average"));
+    const formattedVoteAverage = voteAverage.toFixed(1);
 
-        const src = (this.getAttribute("src") !== "null" && this.getAttribute("src") !== undefined)
-        ? `https://media.themoviedb.org/t/p/w220_and_h330_face${this.getAttribute("src")}` : `${nullimg}`;
+    const src =
+      this.getAttribute("src") !== "null" &&
+      this.getAttribute("src") !== undefined
+        ? `https://media.themoviedb.org/t/p/w220_and_h330_face${this.getAttribute("src")}`
+        : `${nullimg}`;
 
-        this.innerHTML = `
+    this.innerHTML = `
             <div class="flex flex-col mb-5 mt-2 cursor-pointer">
                 <div class="h-30 w-20 relative hover:-translate-y-2 duration-200">
                     <img src="${src}" alt="${this.getAttribute("title")}" 
@@ -33,7 +43,7 @@ class PopularItem extends HTMLElement {
                 </div>
             </div>
         `;
-    }
+  }
 }
-   
-customElements.define('popular-item', PopularItem);
+
+customElements.define("popular-item", PopularItem);

@@ -1,10 +1,10 @@
 class CategoryItem extends HTMLElement {
-    connectedCallback(){
-        this.render();
-    }
+  connectedCallback() {
+    this.render();
+  }
 
-    render(){
-        this.innerHTML = `
+  render() {
+    this.innerHTML = `
             <div class="flex flex-col font-bold">
                 <a id="${this.getAttribute("id")}"}" 
                     class="py-2 px-3 md:px-6 mb-1 rounded-5 cursor-pointer text-xs md:text-sm
@@ -12,7 +12,7 @@ class CategoryItem extends HTMLElement {
                 </a>
             </div>
         `;
-    }
+  }
 }
-   
-customElements.define('category-item', CategoryItem);
+
+customElements.define("category-item", CategoryItem);

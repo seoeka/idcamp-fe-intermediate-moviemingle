@@ -1,9 +1,10 @@
-const $ = require('jquery');
+import $ from "jquery";
 
 class DataSource {
   constructor() {
-    this.baseURL = 'https://api.themoviedb.org/3/';
-    this.accessToken = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0N2YxOTcyYThhMjM5MzYwYjkzODVmZTA0ZWQyZWQ5ZiIsInN1YiI6IjYzZWU1NTA2MWYzZTYwMDBjMDMzYWE5MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.Fiw1tZ1N7ayb0ncpaRGbXxPTPtr3Hb5a_9T_MUl1ZKg'; // Gantilah dengan token akses yang valid
+    this.baseURL = "https://api.themoviedb.org/3/";
+    this.accessToken =
+      "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0N2YxOTcyYThhMjM5MzYwYjkzODVmZTA0ZWQyZWQ5ZiIsInN1YiI6IjYzZWU1NTA2MWYzZTYwMDBjMDMzYWE5MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.Fiw1tZ1N7ayb0ncpaRGbXxPTPtr3Hb5a_9T_MUl1ZKg";
   }
 
   fetchPopular() {
@@ -12,20 +13,20 @@ class DataSource {
       async: true,
       crossDomain: true,
       url: url,
-      method: 'GET',
+      method: "GET",
       headers: {
-        accept: 'application/json',
+        accept: "application/json",
         Authorization: `Bearer ${this.accessToken}`,
       },
     };
 
     return $.ajax(settings)
-      .then(response => {
+      .then((response) => {
         console.log(response);
         return response;
       })
-      .fail(error => {
-        console.error('Error:', error);
+      .fail((error) => {
+        console.error("Error:", error);
         throw error;
       });
   }
@@ -36,97 +37,97 @@ class DataSource {
       async: true,
       crossDomain: true,
       url: url,
-      method: 'GET',
+      method: "GET",
       headers: {
-        accept: 'application/json',
+        accept: "application/json",
         Authorization: `Bearer ${this.accessToken}`,
       },
     };
 
     return $.ajax(settings)
-      .then(response => {
+      .then((response) => {
         console.log(response);
         return response;
       })
-      .fail(error => {
-        console.error('Error:', error);
+      .fail((error) => {
+        console.error("Error:", error);
         throw error;
       });
   }
 
   fetchSearchIdle(page) {
-    const today = new Date().toISOString().split('T')[0]; // Get the current date in the format YYYY-MM-DD
+    const today = new Date().toISOString().split("T")[0]; // Get the current date in the format YYYY-MM-DD
     const url = `${this.baseURL}discover/movie?primary_release_date.lte=${today}&sort_by=release_date.desc&language=en-US&page=${page}`;
     const settings = {
       async: true,
       crossDomain: true,
       url: url,
-      method: 'GET',
+      method: "GET",
       headers: {
-        accept: 'application/json',
+        accept: "application/json",
         Authorization: `Bearer ${this.accessToken}`,
       },
     };
 
     return $.ajax(settings)
-      .then(response => {
+      .then((response) => {
         console.log(response);
         return response;
       })
-      .fail(error => {
-        console.error('Error:', error);
+      .fail((error) => {
+        console.error("Error:", error);
         throw error;
       });
   }
 
   fetchSearchByCategory(categoryId, page) {
-    const today = new Date().toISOString().split('T')[0];
+    const today = new Date().toISOString().split("T")[0];
     const url = `${this.baseURL}/discover/movie?with_genres=${categoryId}&primary_release_date.lte=${today}&sort_by=release_date.desc&language=en-US&page=${page}`;
-    
+
     const settings = {
       async: true,
       crossDomain: true,
       url: url,
-      method: 'GET',
+      method: "GET",
       headers: {
-        accept: 'application/json',
+        accept: "application/json",
         Authorization: `Bearer ${this.accessToken}`,
       },
     };
 
     return $.ajax(settings)
-      .then(response => {
+      .then((response) => {
         console.log(response);
         return response;
       })
-      .fail(error => {
-        console.error('Error:', error);
+      .fail((error) => {
+        console.error("Error:", error);
         throw error;
       });
   }
 
   fetchSearchByQuery(query, page) {
-    const today = new Date().toISOString().split('T')[0];
+    const today = new Date().toISOString().split("T")[0];
     const url = `${this.baseURL}/search/movie?query=${query}&primary_release_date.lte=${today}&sort_by=release_date.desc&language=en-US&page=${page}`;
-    
+
     const settings = {
       async: true,
       crossDomain: true,
       url: url,
-      method: 'GET',
+      method: "GET",
       headers: {
-        accept: 'application/json',
+        accept: "application/json",
         Authorization: `Bearer ${this.accessToken}`,
       },
     };
 
     return $.ajax(settings)
-      .then(response => {
+      .then((response) => {
         console.log(response);
         return response;
       })
-      .fail(error => {
-        console.error('Error:', error);
+      .fail((error) => {
+        console.error("Error:", error);
         throw error;
       });
   }

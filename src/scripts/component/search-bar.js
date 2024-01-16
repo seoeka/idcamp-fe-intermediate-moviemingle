@@ -1,138 +1,150 @@
-import './card/category-item';
-import './card/movie-item';
+import "./card/category-item";
+import "./card/movie-item";
 import DataSource from "../data/data-source";
 
 class SearchBar extends HTMLElement {
-    constructor() {
-        super();
-        this.currentPage = parseInt(localStorage.getItem('currentPage')) || 1;     
-        this.resultsPerPage = 20;
-        this.totalPage = 10;
-        this.lastAction = 'searchList';
-    }
+  constructor() {
+    super();
+    this.currentPage = parseInt(localStorage.getItem("currentPage")) || 1;
+    this.resultsPerPage = 20;
+    this.totalPage = 10;
+    this.lastAction = "searchList";
+  }
 
-    connectedCallback() {
-        this.render();
-        this.fetchCategoryList();
-        this.performLastAction();
-    }
+  connectedCallback() {
+    this.render();
+    this.fetchCategoryList();
+    this.performLastAction();
+  }
 
-    performLastAction() {
-        switch (this.lastAction) {
-            case 'searchList':
-                this.fetchSearchList();
-                break;
-            case 'category':
-                this.fetchAndRenderCategory(this.lastActionData);
-                break;
-            case 'query':
-                const queryInputElement = this.querySelector('#searchElement');
-                const query = queryInputElement.value;
-                this.fetchAndRenderQuery(query);
-                break;
-            default:
-                this.fetchSearchList();
-                break;
+  performLastAction() {
+    switch (this.lastAction) {
+    case "searchList":
+      this.fetchSearchList();
+      break;
+    case "category":
+      this.fetchAndRenderCategory(this.lastActionData);
+      break;
+    case "query": {
+      const queryInputElement = this.querySelector("#searchElement");
+      const query = queryInputElement.value;
+      this.fetchAndRenderQuery(query);
+      break;
+    }
+    default:
+      this.fetchSearchList();
+      break;
+    }
+    if (!localStorage.getItem("currentPage")) {
+      this.currentPage = 1;
+      this.updateCurrentPage();
+    }
+  }
+
+  async fetchCategoryList() {
+    try {
+      const catData = await DataSource.fetchCategory();
+      const categories = catData.genres;
+      this.renderCat(categories);
+    } catch (error) {
+      console.error("Error fetching movies genres:", error);
+    }
+  }
+
+  renderCat(categories) {
+    const movieCategory = this.querySelector(".cat");
+    movieCategory.innerHTML = "";
+
+    categories.forEach((category) => {
+      const catCard = document.createElement("category-item");
+      catCard.setAttribute("id", category.id);
+      catCard.setAttribute("name", category.name);
+      movieCategory.appendChild(catCard);
+    });
+  }
+
+  async fetchSearchList() {
+    try {
+      this.updateCurrentPage();
+      const searchData = await DataSource.fetchSearchIdle(this.currentPage);
+      const searches = searchData.results;
+      const total = searchData.total_results;
+      this.totalPage = Math.min(10, Math.ceil(total / this.resultsPerPage));
+      this.renderSearch(searches, total);
+      localStorage.setItem("currentPage", this.currentPage);
+    } catch (error) {
+      console.error("Error fetching movies:", error);
+    }
+  }
+
+  async fetchAndRenderQuery(query) {
+    try {
+      const searchResults = await DataSource.fetchSearchByQuery(
+        query,
+        this.currentPage,
+      );
+      if (query == "") {
+        this.renderSearch(searchResults.results, searchResults.total_results);
+      } else {
+        if (searchResults.results.length === 0) {
+          this.renderNotFound();
+        } else {
+          this.renderSearch(searchResults.results, searchResults.total_results);
         }
-        if (!localStorage.getItem('currentPage')) {
-            this.currentPage = 1;
-            this.updateCurrentPage();
-        }
+      }
+      this.totalPage = Math.min(
+        10,
+        Math.ceil(searchResults.total_results / this.resultsPerPage),
+      );
+      this.updateCurrentPage();
+    } catch (error) {
+      console.error("Error fetching movies:", error);
     }
+  }
 
-    async fetchCategoryList() {
-        try {
-            const catData = await DataSource.fetchCategory();
-            const categories = catData.genres;
-            this.renderCat(categories);
-        } catch (error) {
-            console.error('Error fetching movies genres:', error);
-        }
-    }
+  renderSearch(searches) {
+    const sortedSearches = searches.sort(
+      (a, b) => new Date(b.release_date) - new Date(a.release_date),
+    );
 
-    renderCat(categories) {
-        const movieCategory = this.querySelector('.cat');
-        movieCategory.innerHTML = '';
+    const searchContainer = this.querySelector(".search-con");
+    searchContainer.innerHTML = "";
 
-        categories.forEach((category) => {
-            const catCard = document.createElement('category-item');
-            catCard.setAttribute('id', category.id);
-            catCard.setAttribute('name', category.name); 
-            movieCategory.appendChild(catCard);
-        });
-    }
+    sortedSearches.slice(0, 20).forEach((search) => {
+      const searchCard = document.createElement("movie-item");
+      searchCard.setAttribute("src", search.poster_path);
+      searchCard.setAttribute("title", search.title);
+      searchCard.setAttribute("release-date", search.release_date);
+      searchCard.setAttribute("vote-average", search.vote_average);
+      searchCard.setAttribute("id", search.genre_ids);
+      searchContainer.appendChild(searchCard);
+    });
+  }
 
-    async fetchSearchList() {
-        try {
-            this.updateCurrentPage();
-            const searchData = await DataSource.fetchSearchIdle(this.currentPage);
-            const searches = searchData.results;
-            const total = searchData.total_results;
-            this.totalPage = Math.min(10, Math.ceil(total / this.resultsPerPage));
-            this.renderSearch(searches, total);
-            localStorage.setItem('currentPage', this.currentPage); 
-        } catch (error) {
-            console.error('Error fetching movies:', error);
-        }
-    }
+  renderNotFound() {
+    const searchContainer = this.querySelector(".search-con");
 
-    async fetchAndRenderQuery(query) {
-        try {
-            const searchResults = await DataSource.fetchSearchByQuery(query, this.currentPage);
-            if (query== ""){
-                this.renderSearch(searchResults.results, searchResults.total_results);
-            } else {
-                if (searchResults.results.length === 0) {
-                    this.renderNotFound();
-                } else {
-                    this.renderSearch(searchResults.results, searchResults.total_results);
-                }
-            }
-            this.totalPage = Math.min(10, Math.ceil(searchResults.total_results / this.resultsPerPage));
-            this.updateCurrentPage();
-        } catch (error) {
-            console.error('Error fetching movies:', error);
-        }
-    }
-
-    renderSearch(searches) {
-        const sortedSearches = searches.sort((a, b) => new Date(b.release_date) - new Date(a.release_date));
-
-        const searchContainer = this.querySelector('.search-con');
-        searchContainer.innerHTML = '';
-
-        sortedSearches.slice(0, 20).forEach((search) => {
-            const searchCard = document.createElement('movie-item');
-            searchCard.setAttribute('src', search.poster_path);
-            searchCard.setAttribute('title', search.title); 
-            searchCard.setAttribute('release-date', search.release_date);
-            searchCard.setAttribute('vote-average', search.vote_average);
-            searchCard.setAttribute('id', search.genre_ids);
-            searchContainer.appendChild(searchCard);
-        });
-    }
-
-    renderNotFound() {
-        const searchContainer = this.querySelector('.search-con');
-
-        searchContainer.innerHTML = `
+    searchContainer.innerHTML = `
             <div class="flex w-full">
                 <p class="flex w-full m-auto">There are no movies that matched your query.</p>
             </div>`;
-    }
+  }
 
-    async fetchAndRenderCategory(categoryId) {
-        try {
-            this.updateCurrentPage();
-            const searchResults = await DataSource.fetchSearchByCategory(categoryId, this.currentPage);
-            this.renderSearch(searchResults.results, searchResults.total_results);
-        } catch (error) {
-            console.error('Error fetching movies:', error);
-        }
+  async fetchAndRenderCategory(categoryId) {
+    try {
+      this.updateCurrentPage();
+      const searchResults = await DataSource.fetchSearchByCategory(
+        categoryId,
+        this.currentPage,
+      );
+      this.renderSearch(searchResults.results, searchResults.total_results);
+    } catch (error) {
+      console.error("Error fetching movies:", error);
     }
-    
-    render() {
-        this.innerHTML =`
+  }
+
+  render() {
+    this.innerHTML = `
             <style>
                 .num {
                     width:35px;
@@ -169,18 +181,18 @@ class SearchBar extends HTMLElement {
                 </div>
             </div>
         `;
-        
-        this.updateCurrentPage();
-    }
-    
-    updateCurrentPage() {
-        localStorage.setItem('currentPage', this.currentPage);
-        const currentPageElement = this.querySelector('#currentPage');
-        currentPageElement.textContent = this.currentPage;
 
-        const lastPageElement = this.querySelector('#lastPage');
-        lastPageElement.textContent = this.totalPage;
-    }
+    this.updateCurrentPage();
+  }
+
+  updateCurrentPage() {
+    localStorage.setItem("currentPage", this.currentPage);
+    const currentPageElement = this.querySelector("#currentPage");
+    currentPageElement.textContent = this.currentPage;
+
+    const lastPageElement = this.querySelector("#lastPage");
+    lastPageElement.textContent = this.totalPage;
+  }
 }
 
 customElements.define("search-bar", SearchBar);

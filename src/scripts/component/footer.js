@@ -2,12 +2,12 @@ import mainimg from "../../images/main-image.png";
 import logo from "../../images/logo.png";
 
 class FooterCo extends HTMLElement {
-    connectedCallback() {
-        this.render();
-    }
+  connectedCallback() {
+    this.render();
+  }
 
-    render(){
-        this.innerHTML =`
+  render() {
+    this.innerHTML = `
             <div class="flex relative h-16">
                 <div class="absolute inset-0 bg-black bg-opacity-50"></div>
                 <img src="${mainimg}" class="flex w-full h-full object-cover"></img>
@@ -31,7 +31,7 @@ class FooterCo extends HTMLElement {
                 </span>
             </div>
         `;
-    }
+  }
 }
 
 customElements.define("footer-co", FooterCo);

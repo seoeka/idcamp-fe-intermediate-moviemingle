@@ -1,12 +1,12 @@
 import mainimg from "../../images/main-image.png";
 
 class BannerBackground extends HTMLElement {
-    connectedCallback() {
-        this.render();
-    }
+  connectedCallback() {
+    this.render();
+  }
 
-    render() {
-        this.innerHTML =`
+  render() {
+    this.innerHTML = `
         <div id="home" class="h-screen sm:h-600 flex relative overflow-hidden">
             <div class="absolute inset-0" style="background-image: linear-gradient(96deg, #001F3F 30%, rgba(0, 31, 63, 0.73) 45%, rgba(0, 31, 63, 0.00) 70%);"></div>
             <img src="${mainimg}" alt="Background Image" class="object-cover w-full h-full sm:w-auto sm:h-auto" style="margin-left: 25%;" />
@@ -20,7 +20,7 @@ class BannerBackground extends HTMLElement {
             </div>
         </div>
             `;
-    }
+  }
 }
 
 customElements.define("banner-bg", BannerBackground);
