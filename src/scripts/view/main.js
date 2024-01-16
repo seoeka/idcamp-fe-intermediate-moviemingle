@@ -64,6 +64,7 @@ function main() {
     togglePaginationButtons(searchBar.currentPage, searchBar.totalPage);
     searchBar.performLastAction();
     searchBar.updateCurrentPage();
+    document.getElementById("search").scrollIntoView({ behavior: "smooth" });
   });
 
   nextButton.addEventListener("click", () => {
@@ -74,6 +75,7 @@ function main() {
     togglePaginationButtons(searchBar.currentPage, searchBar.totalPage);
     searchBar.performLastAction();
     searchBar.updateCurrentPage();
+    document.getElementById("search").scrollIntoView({ behavior: "smooth" });
   });
 
   function togglePaginationButtons(currentPage, totalPage) {

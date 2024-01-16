@@ -132,11 +132,15 @@ class SearchBar extends HTMLElement {
 
   async fetchAndRenderCategory(categoryId) {
     try {
-      this.updateCurrentPage();
       const searchResults = await DataSource.fetchSearchByCategory(
         categoryId,
         this.currentPage,
       );
+      this.totalPage = Math.min(
+        10,
+        Math.ceil(searchResults.total_results / this.resultsPerPage),
+      );
+      this.updateCurrentPage();
       this.renderSearch(searchResults.results, searchResults.total_results);
     } catch (error) {
       console.error("Error fetching movies:", error);
@@ -155,18 +159,18 @@ class SearchBar extends HTMLElement {
 
 
             <div id="search" class="flex flex-col bg-white w-co my-8 font-bold m-auto">
-                <h3 class="flex m-auto w-fit text-lg mb-4">Find Movies, Discover Stories</h3>
-                <div class="flex m-auto text-sm shadow-search items-center rounded-5 w-full md:w-fit p-2">
+                <h3 class="flex m-auto w-fit text-lg mb-4" data-aos="fade-up" data-aos-duration="700">Find Movies, Discover Stories</h3>
+                <div class="flex m-auto text-sm shadow-search items-center rounded-5 w-full md:w-fit p-2" data-aos="fade-up" data-aos-duration="800">
                     <span class="material-icons opacity-50 px-3 py-1">search</span>
                     <input id="searchElement" class="font-normal w-full md:w-40 px-1 pl-0 pr-2 focus:outline-none" placeholder="Search Movies..."></input>
                 </div>
-                <div class="flex flex-row font-bold mt-5 md:mt-0">
+                <div class="flex flex-row font-bold mt-5 md:mt-0" data-aos="fade-right" data-aos-duration="1000">
                     <div class="hidden md:flex flex-col w-21 mr-3 md:mr-6">
                         <h4 class="py-2 px-3 md:px-6 text-base">Genre</h4>
                         <div class="cat"></div>
                     </div>
                     <div class="flex w-full flex-col h-fit">
-                        <h4 class="py-2 px-6 text-base text-white cursor-default">Search List</h4>
+                        <h4 class="py-2 px-6 text-base text-white cursor-default">.</h4>
                         <div class="flex w-full flex-wrap search-con justify-center m-auto gap-3 search-con"></div>
                         <div class="flex flex-row ml-auto items-center">
                             <div class="pagination text-dark_purple">

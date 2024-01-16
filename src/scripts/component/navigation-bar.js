@@ -11,13 +11,13 @@ class NavigationBar extends HTMLElement {
     this.innerHTML = `
         <nav class="fixed flex z-[10] w-full text-white font-bold text-20 lg:p-nav md:p-nav-md p-15 transition duration-300">
           <div class="flex items-center m-auto w-co justify-between xl:w-co-xl">
-            <img src=${logo} alt="logo-app" class="xl:h-11 h-11"/>
+            <img src=${logo} alt="logo-app" class="xl:h-11 h-11" data-aos="fade-down" data-aos-duration="700"/>
             <div id="navbarMenu" class="hidden md:flex md:flex-row space-x-10 items-center">
-                <a href="#home" class="hover:text-light_purple">Home</a>
-                <a href="#movies" class="hover:text-light_purple">Movies</a>
-                <a href="#search" class="hover:text-light_purple">Search</a>
-                <a href="#about-us" class="hover:text-light_purple">About Us</a>
-                <a href="#login" class="text-black bg-purple p-but rounded-5 hover:bg-light_purple">Login</a>
+                <a href="#home" class="hover:text-light_purple" data-aos="fade-down" data-aos-duration="700">Home</a>
+                <a href="#movies" class="hover:text-light_purple" data-aos="fade-down" data-aos-duration="800">Movies</a>
+                <a href="#search" class="hover:text-light_purple" data-aos="fade-down" data-aos-duration="900">Search</a>
+                <a href="#about-us" class="hover:text-light_purple" data-aos="fade-down" data-aos-duration="1000">About Us</a>
+                <a href="#login" class="text-black bg-purple p-but rounded-5 hover:bg-light_purple" data-aos="fade-down" data-aos-duration="1100">Login</a>
             </div>
             <div class="md:hidden">
                 <button id="menuToggle" class=" text-white text-xl material-icons">menu</button>
