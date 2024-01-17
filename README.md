@@ -1,8 +1,11 @@
 # Overview
+![five stars](https://github.com/seoeka/movie-mingle/assets/87307944/8ca0a990-737a-413d-a612-ddd836462a12)
 
 ## Movie Mingle
 
 **Description:** Dicoding x IdCamp FE Submission
+
+**Rating Submission:** ⭐⭐⭐⭐⭐
 
 **Version:** 1.0.0
 
