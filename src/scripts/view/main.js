@@ -1,4 +1,4 @@
-function main() {
+const main = () => {
   const searchBar = document.querySelector("search-bar");
   const categoryContainer = document.querySelector(".cat");
   const searchInputElement = document.querySelector("#searchElement");
@@ -78,14 +78,14 @@ function main() {
     document.getElementById("search").scrollIntoView({ behavior: "smooth" });
   });
 
-  function togglePaginationButtons(currentPage, totalPage) {
+  const togglePaginationButtons = (currentPage, totalPage) => {
     const prevButton = document.querySelector("[data-type=\"prev\"]");
     const nextButton = document.querySelector("[data-type=\"next\"]");
 
     prevButton.style.display = currentPage === 1 ? "none" : "inline-block";
     nextButton.style.display =
       currentPage === totalPage ? "none" : "inline-block";
-  }
+  };
 
   searchBar.currentPage = 1;
   togglePaginationButtons(searchBar.currentPage, searchBar.totalPage);
@@ -97,6 +97,6 @@ function main() {
     searchBar.performLastAction();
     searchBar.updateCurrentPage();
   }
-}
+};
 
 export default main;
